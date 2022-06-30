@@ -4,10 +4,9 @@ Ambiente de Desenvolvimento e Testes de um cluster de swarm
 ## Infraestrutura da implementação deste cluser
 ```mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    PORTAINER-->MASTER;
+    MASTER-->NODE1;
+    MASTER-->NODE2;
 ```
 
 ## Procedimento de Instalação
