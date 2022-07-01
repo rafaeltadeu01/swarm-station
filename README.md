@@ -1,6 +1,8 @@
 # swarm-station
 Ambiente de Desenvolvimento e Testes de um cluster de swarm
 
+Dedicado para o meu amigo Tonello
+
 ## Infraestrutura da implementação deste cluser
 ```mermaid
 graph TD;
