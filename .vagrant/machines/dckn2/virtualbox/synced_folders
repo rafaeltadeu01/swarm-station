@@ -1,0 +1,1 @@
+{"virtualbox":{"/opt/scripts":{"guestpath":"/opt/scripts","hostpath":"/home/rafael/Tempoassist/laboratorios/swarm-station/scripts","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/rafael/Tempoassist/laboratorios/swarm-station","disabled":false,"__vagrantfile":true}}}

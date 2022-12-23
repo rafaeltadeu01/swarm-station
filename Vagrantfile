@@ -1,5 +1,19 @@
 Vagrant.configure("2") do |config|
- 
+
+  config.vm.define "dckstg" do |dckstg|
+    dckstg.vm.box = "ubuntu/focal64"
+    dckstg.vm.hostname = "dckstg"
+    dckstg.vm.network "private_network", ip: "192.168.56.20"
+    dckstg.vm.synced_folder "scripts", "/opt/scripts"    
+    dckstg.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
+    dckstg.vm.provision "shell", inline: "sudo chmod +x /opt/scripts/*"
+    dckstg.vm.provision "shell", inline: "/opt/scripts/install_nfs_server.sh"
+    dckstg.vm.provision "shell", inline: "/opt/scripts/install_docker.sh"
+    dckstg.vm.provision "shell", inline: "/opt/scripts/install_docker_compose.sh"
+    dckstg.vm.provision "shell", inline: "sudo docker run -d -p 9001:9001 --name portainer_agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:latest"
+    #dckstg.vm.provision "shell", inline: "cd /opt/scripts/docker-compose-files/minio && sudo docker-compose up -d"
+  end
+
   config.vm.define "dckm1" do |dckm1|
     dckm1.vm.box = "ubuntu/focal64"
     dckm1.vm.hostname = "dckm1"
@@ -8,8 +22,10 @@ Vagrant.configure("2") do |config|
     dckm1.vm.network "forwarded_port", guest: 80, host: 80
     dckm1.vm.network "forwarded_port", guest: 443, host: 443
     dckm1.vm.network "forwarded_port", guest: 9000, host: 9000
-    #dckm1.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
+    dckm1.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
     dckm1.vm.provision "shell", inline: "sudo chmod +x /opt/scripts/*"
+    dckm1.vm.provision "shell", inline: "/opt/scripts/config_storage.sh"
+    dckm1.vm.provision "shell", inline: "/opt/scripts/config_nfs_clients.sh"
     dckm1.vm.provision "shell", inline: "/opt/scripts/install_docker.sh"
     dckm1.vm.provision "shell", inline: "/opt/scripts/install_docker_compose.sh"
     dckm1.vm.provision "shell", inline: "/opt/scripts/install_portainer.sh"
@@ -23,29 +39,22 @@ Vagrant.configure("2") do |config|
     dckn1.vm.synced_folder "scripts", "/opt/scripts"    
     dckn1.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
     dckn1.vm.provision "shell", inline: "sudo chmod +x /opt/scripts/*"
+    dckn1.vm.provision "shell", inline: "/opt/scripts/config_storage.sh"
+    dckn1.vm.provision "shell", inline: "/opt/scripts/config_nfs_clients.sh"
     dckn1.vm.provision "shell", inline: "/opt/scripts/install_docker.sh"
     dckn1.vm.provision "shell", inline: "/opt/scripts/join_swarm.sh"
-    #dckn1.vm.provision "shell", inline: "mkdir -p /home/vagrant/jenkins_compose/jenkins_configuration"
   end
 
   config.vm.define "dckn2" do |dckn2|
     dckn2.vm.box = "ubuntu/focal64"
     dckn2.vm.hostname = "dckn2"
     dckn2.vm.network "private_network", ip: "192.168.56.12"
-    dckn2.vm.synced_folder "scripts", "/opt/scripts"    
+    dckn2.vm.synced_folder "scripts", "/opt/scripts"
+    dckn2.vm.provision "shell", inline: "/opt/scripts/config_storage.sh"    
     dckn2.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
     dckn2.vm.provision "shell", inline: "sudo chmod +x /opt/scripts/*"
+    dckn2.vm.provision "shell", inline: "/opt/scripts/config_nfs_clients.sh"
     dckn2.vm.provision "shell", inline: "/opt/scripts/install_docker.sh"
     dckn2.vm.provision "shell", inline: "/opt/scripts/join_swarm.sh"
-  end
-
-  config.vm.define "dckstg" do |dckstg|
-    dckstg.vm.box = "ubuntu/focal64"
-    dckstg.vm.hostname = "dckstg"
-    dckstg.vm.network "private_network", ip: "192.168.56.20"
-    dckstg.vm.synced_folder "scripts", "/opt/scripts"    
-    dckstg.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y"
-    dckstg.vm.provision "shell", inline: "sudo chmod +x /opt/scripts/*"
-    dckstg.vm.provision "shell", inline: "/opt/scripts/install_docker.sh"
   end
 end
