@@ -6,12 +6,19 @@ Dedicado para o meu amigo Tonello
 ## Infraestrutura da implementação deste cluser
 ```mermaid
 graph TD;
-    STORAFE-->MASTER;
-    STORAFE-->NODE1;
-    STORAFE-->NODE2;
     PORTAINER-->MASTER;
     MASTER-->NODE1;
     MASTER-->NODE2;
+```
+
+## Infraestrutura de armazenamento de dados dentro do clusterv
+```mermaid
+graph TD;
+    STORAGE-->MASTER;
+    STORAGE-->NODE1;
+    STORAGE-->NODE2;
+    STORAGE-->MASTER;
+    PORTAINER-->MASTER;
 ```
 
 ## Procedimento de Instalação
